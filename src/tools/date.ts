@@ -1,10 +1,8 @@
-
-
 import { parse, differenceInDays, differenceInHours } from 'date-fns';
 
-const FORMAT = 'YYYY-MM-DD HH:mm:ss';
+const FORMAT = 'yyyy/MM/dd HH:mm:ss';
 
-// ex: "2024/04/15 09:00:00"
+
 export default function calculateDaysAndHours(date: string) {
     const now = new Date();
     const auctionDate = parse(date, FORMAT, new Date());

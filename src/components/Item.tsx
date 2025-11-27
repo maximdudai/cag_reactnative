@@ -1,31 +1,51 @@
-import { Image, Text, View } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import calculateDaysAndHours from "../tools/date";
 
 type ItemProps = {
     auctionDateTime: string;
     imageUrl?: string;
+    onPressItem?: () => void;
 }
 
-const PLACEHOLEDER_IMAGE = "https://via.placeholder.com/150";
+const PLACEHOLEDER_IMAGE = "https://placehold.co/150x150?text=Placeholder+Image&font=roboto";
 
 export default function Item({
     auctionDateTime,
+    onPressItem,
     imageUrl = PLACEHOLEDER_IMAGE
 }: ItemProps) {
 
+    console.log('auctionDateTime:', auctionDateTime);
     const { days, hours } = calculateDaysAndHours(auctionDateTime);
 
+    console.log(`Remaining Days: ${days}, Hours: ${hours}`);
+
     return (
-        <View>
-            <Image source={{ uri: imageUrl }} style={style.itemImage} />
-            <Text>{days} days and {hours} hours</Text>
+        <View style={style.itemContainer}>
+            <TouchableOpacity onPress={onPressItem}>
+                <Image source={{ uri: imageUrl }} style={style.itemImage} />
+                <Text style={style.itemText}>{days} days and {hours} hours</Text>
+            </TouchableOpacity>
         </View>
     )
 }
 
 const style = {
+    itemContainer: {
+        flexDirection: 'column' as const,
+        alignItems: 'center' as const,
+        margin: 16,
+        backgroundColor: '#484848',
+        padding: 16,
+        borderRadius: 8
+    },
     itemImage: {
         width: 150,
-        height: 150
+        height: 150,
+    },
+    itemText: {
+        fontSize: 16,
+        color: 'white',
+        marginTop: 8
     }
 }
