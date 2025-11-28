@@ -9,12 +9,9 @@ export default function MainPage() {
         vehicleData
     } = useContext(VehicleDataContext);
 
-    console.log("Vehicle Data:", vehicleData);
 
-    
-
-    const handlePressItem = useCallback(() => {
-        console.log("Item pressed");
+    const handlePressItem = useCallback((item: any) => {
+        console.log("Item pressed", item);
     }, []);
 
     if (isLoading) {
@@ -30,9 +27,11 @@ export default function MainPage() {
             keyExtractor={item => item.id}
             renderItem={({ item }) =>
                 <Item
+                    key={item.id}
                     auctionDateTime={item.auctionDateTime}
                     imageUrl={item.imageUrl}
-                    onPressItem={handlePressItem}
+                    onPressItem={() => handlePressItem(item)}
+                    isFavorite={item.favourite}
                 />
             }
             keyboardDismissMode="on-drag"
