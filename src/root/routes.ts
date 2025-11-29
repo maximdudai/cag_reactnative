@@ -1,6 +1,5 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RouteProp } from "@react-navigation/native";
-import { Vehicle } from "../types/Vehicle";
 
 export enum AppRoutes {
     HOME = 'Home',
@@ -10,7 +9,7 @@ export enum AppRoutes {
 export type RootStackParamList = {
     [AppRoutes.HOME]: undefined;
     [AppRoutes.DETAILS]: {
-        vehicle: Vehicle
+        vehicleId: string
     };
 };
 

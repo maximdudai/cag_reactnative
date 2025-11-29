@@ -2,14 +2,30 @@ import { useRoute } from "@react-navigation/native";
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { DetailsRouteProp } from "../../root/routes";
 import { formatCurrency } from "../../tools/number";
+import { useContext } from "react";
+import { VehicleDataContext } from "../../context/DataContext";
 
 const IMAGE_URL = 'https://www.shutterstock.com/image-vector/car-logo-icon-emblem-design-600nw-473088037.jpg';
 
 export default function Details() {
     const route = useRoute<DetailsRouteProp>();
-    const { vehicle } = route.params;
-    const vehicleStartingBid = formatCurrency(vehicle.startingBid);
+    const { vehicleId } = route.params;
 
+    const {
+        vehicleData
+    } = useContext(VehicleDataContext);
+
+    const vehicle = vehicleData.find((v: any) => v.id === vehicleId);
+
+    if (!vehicle) {
+        return (
+            <View>
+                <Text>Vehicle not found</Text>
+            </View>
+        );
+    }
+
+    const vehicleStartingBid = formatCurrency(vehicle.startingBid);
     const detailSections = [
         { title: 'Favourite', value: vehicle.favourite ? 'Yes' : 'No' },
         { title: 'Vehicle Make', value: vehicle.make },
