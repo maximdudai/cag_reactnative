@@ -1,5 +1,7 @@
-import { createContext, useState, useMemo, useEffect } from "react";
+import { createContext, useEffect, useMemo, useState } from "react";
 import vehicleMockData from "../data/vehicles.json";
+import { getListOfFavoriteVehicles, initializeFavoriteVehicles } from "../tools/storage";
+import { Vehicle } from "../types/Vehicle";
 
 export const VehicleDataContext = createContext([] as any);
 
@@ -7,27 +9,53 @@ export default function VehicleDataProvider({
     children
 }: { children: React.ReactNode }) {
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [vehicleData, setVehicleData] = useState({});
-    
-    const vehicleDataWithIds = useMemo(() => 
+    const [vehicleData, setVehicleData] = useState<Vehicle[]>([]);
+    const [favoriteVehicles, setFavoriteVehicles] = useState<string[]>([]);
+
+    const vehicleDataWithIds = useMemo(() =>
         vehicleMockData.map((vehicle, index) => ({
             ...vehicle,
             id: `vehicle-${index}`
         })),
         []
     );
-    
+
     useEffect(() => {
         setVehicleData(vehicleDataWithIds);
+
+        const initializeFavorites = async () => {
+            const storedFavorites = await getListOfFavoriteVehicles();
+
+            const defaultFavorites = vehicleDataWithIds
+                .filter(vehicle => vehicle.favourite)
+                .map(veh => veh.id);
+
+            const updatedList = Array.from(new Set([...storedFavorites, ...defaultFavorites]));
+
+
+            setFavoriteVehicles(updatedList);
+            await initializeFavoriteVehicles(updatedList);
+        };
+
+        initializeFavorites();
     }, [vehicleDataWithIds]);
 
+    const updateVehicleData = (vehicle: Vehicle) => {
+        setVehicleData((prevData) =>
+            prevData.map((veh) => veh.id === vehicle.id ? vehicle : veh)
+        );
+    }
+
     return (
-        <VehicleDataContext.Provider 
-            value={{ 
+        <VehicleDataContext.Provider
+            value={{
                 isLoading,
                 vehicleData,
+                favoriteVehicles,
                 setVehicleData,
-                setIsLoading
+                setIsLoading,
+                setFavoriteVehicles,
+                updateVehicleData
             }}
         >
             {children}

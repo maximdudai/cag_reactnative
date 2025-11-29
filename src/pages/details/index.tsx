@@ -1,9 +1,11 @@
 import { useRoute } from "@react-navigation/native";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { VehicleDataContext } from "../../context/DataContext";
 import { DetailsRouteProp } from "../../root/routes";
 import { formatCurrency } from "../../tools/number";
-import { useContext } from "react";
-import { VehicleDataContext } from "../../context/DataContext";
+import { addVehicleToFavorite } from "../../tools/storage";
+import { Vehicle } from "../../types/Vehicle";
 
 const IMAGE_URL = 'https://www.shutterstock.com/image-vector/car-logo-icon-emblem-design-600nw-473088037.jpg';
 
@@ -12,10 +14,37 @@ export default function Details() {
     const { vehicleId } = route.params;
 
     const {
-        vehicleData
+        vehicleData,
+        updateVehicleData,
+        favoriteVehicles,
+        setFavoriteVehicles
     } = useContext(VehicleDataContext);
 
-    const vehicle = vehicleData.find((v: any) => v.id === vehicleId);
+    const vehicle = vehicleData.find((v: Vehicle) => v.id === vehicleId);
+    const [isFavorite, setIsFavorite] = useState<boolean>(false);
+
+    useEffect(() => {
+        const favoriteStatus = favoriteVehicles.includes(vehicleId);
+        setIsFavorite(favoriteStatus);
+    }, [vehicleId, favoriteVehicles]);
+
+    const handleVehicleToFavorite = useCallback(async () => {
+        const hasAddedToFavorite = await addVehicleToFavorite(vehicleId);
+
+        setIsFavorite(hasAddedToFavorite);
+
+        if (hasAddedToFavorite) {
+            setFavoriteVehicles([...favoriteVehicles, vehicleId]);
+        } else {
+            setFavoriteVehicles(favoriteVehicles.filter((id: string) => id !== vehicleId));
+        }
+
+        updateVehicleData({
+            ...vehicle,
+            favourite: hasAddedToFavorite
+        });
+
+    }, [vehicleId, updateVehicleData, vehicle, favoriteVehicles, setFavoriteVehicles]);
 
     if (!vehicle) {
         return (
@@ -27,7 +56,7 @@ export default function Details() {
 
     const vehicleStartingBid = formatCurrency(vehicle.startingBid);
     const detailSections = [
-        { title: 'Favourite', value: vehicle.favourite ? 'Yes' : 'No' },
+        { title: 'Favourite', value: isFavorite ? 'Yes' : 'No' },
         { title: 'Vehicle Make', value: vehicle.make },
         { title: 'Vehicle Model', value: vehicle.model },
         { title: 'Engine Size', value: vehicle.engineSize },
@@ -36,25 +65,25 @@ export default function Details() {
         { title: 'Mileage', value: vehicle.mileage },
         { title: 'Auction Date and Time', value: vehicle.auctionDateTime },
         { title: 'Starting Bid', value: vehicleStartingBid },
-        { 
-            title: 'Vehicle Description', 
-            value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.' 
+        {
+            title: 'Vehicle Description',
+            value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.'
         },
-        { 
-            title: 'Vehicle History', 
-            value: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.' 
+        {
+            title: 'Vehicle History',
+            value: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.'
         },
-        { 
-            title: 'Condition Report', 
-            value: 'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.' 
+        {
+            title: 'Condition Report',
+            value: 'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.'
         },
-        { 
-            title: 'Additional Features', 
-            value: 'Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus.' 
+        {
+            title: 'Additional Features',
+            value: 'Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus.'
         },
-        { 
-            title: 'Seller Notes', 
-            value: 'Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.' 
+        {
+            title: 'Seller Notes',
+            value: 'Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.'
         },
     ];
 
@@ -76,10 +105,13 @@ export default function Details() {
                     </View>
                 </View>
             </ScrollView>
-            <TouchableOpacity style={style.floatButton}>
+            <TouchableOpacity
+                style={style.floatButton}
+                onPress={handleVehicleToFavorite}
+            >
                 <Text>
                     {
-                        vehicle.favourite ? 'Unfollow' : 'Follow'
+                        isFavorite ? 'Unfollow' : 'Follow'
                     }
                 </Text>
             </TouchableOpacity>

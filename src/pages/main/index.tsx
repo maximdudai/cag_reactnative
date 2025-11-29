@@ -8,7 +8,7 @@ import { AppRoutes, MainRouteProps } from "../../root/routes";
 export default function MainPage() {
     const {
         isLoading,
-        vehicleData
+        vehicleData,
     } = useContext(VehicleDataContext);
 
     const navigation = useNavigation<MainRouteProps>();
@@ -37,6 +37,7 @@ export default function MainPage() {
                     auctionDateTime={item.auctionDateTime}
                     imageUrl={item.imageUrl}
                     onPressItem={() => handlePressItem(item.id)}
+                    isFavorite={item.favourite}
                 />
             }
             keyboardDismissMode="on-drag"
