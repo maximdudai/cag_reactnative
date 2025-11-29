@@ -34,6 +34,10 @@ export const styles = ({
         padding: defaultStyles.SMALL_MARGIN,
         borderRadius: 5,
     },
+    filterLabel: {
+        fontSize: defaultStyles.FONT_SIZE_MEDIUM,
+        fontWeight: 'bold',
+    },
     inlineStyle: {
         display: 'flex',
         flexDirection: 'row',

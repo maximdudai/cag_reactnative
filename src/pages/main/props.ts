@@ -1,12 +1,19 @@
+
+export enum FilterFields {
+    MAKE = 'make',
+    MODEL = 'model',
+    STARTING_BID_RANGE = 'startingBidRange',
+    ONLY_FAVOURITES = 'onlyFavourites'
+}
+
 export type ModalContentProps = {
     makeOptions: string[];
     modelOptions: string[];
-    startingBidRangeOptions: { min?: number; max?: number };
+    startingBidRangeOptions: { min?: number | null; max?: number | null };
     onlyFavourites: boolean;
-    onSelectMakeFilter?: (value: string) => void;
-    onSelectModelFilter?: (value: string) => void;
-    onToggleOnlyFavourites?: () => void;
+    onChangeFilters?: (field: FilterFields, value: any) => void;
     handleCloseFilterModal?: () => void;
+
 }
 export type ModalFooterProps = {
     onApplyFilters: () => void;

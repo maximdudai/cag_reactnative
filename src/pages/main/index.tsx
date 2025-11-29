@@ -11,8 +11,9 @@ import { VehicleDataContext } from "../../context/DataContext";
 import { AppRoutes, MainRouteProps } from "../../root/routes";
 import filterVehicleList from "../../tools/filter";
 import { Vehicle } from "../../types/Vehicle";
-import { ModalContentProps, ModalFooterProps } from "./props";
+import { FilterFields, ModalContentProps, ModalFooterProps } from "./props";
 import { pickerStyle, styles } from "./styles";
+import Input from "../../components/Input";
 
 
 export default function MainPage() {
@@ -83,6 +84,13 @@ export default function MainPage() {
 
         setFilteredVehicleData(getFilteredVehicleList);
     }, [filterList, originalVehicleData, favoriteVehicles]);
+
+    const handleChangeFilters = useCallback((field: FilterFields, value: any) => {
+        setFilterList(prevFilters => ({
+            ...prevFilters,
+            [field]: value
+        }));
+    }, []);
 
     const handleApplyFilterList = useCallback(() => {
         setIsLoading(true);
@@ -164,20 +172,9 @@ export default function MainPage() {
                         <ModalContent
                             makeOptions={uniqueVehicleMakes}
                             modelOptions={uniqueVehicleModels}
-                            startingBidRangeOptions={filterList.startingBidRange}
+                            startingBidRangeOptions={filterList.startingBidRange || { min: 0, max: 0 }}
                             onlyFavourites={filterList.onlyFavourites}
-                            onToggleOnlyFavourites={() => setFilterList(prev => ({
-                                ...prev,
-                                onlyFavourites: !prev.onlyFavourites
-                            }))}
-                            onSelectMakeFilter={(value: string) => setFilterList(prev => ({
-                                ...prev,
-                                make: value
-                            }))}
-                            onSelectModelFilter={(value: string) => setFilterList(prev => ({
-                                ...prev,
-                                model: value
-                            }))}
+                            onChangeFilters={(field, value) => handleChangeFilters(field, value)}
                             handleCloseFilterModal={() => setIsFilterModalVisible(false)}
                         />
                     }
@@ -199,9 +196,7 @@ const ModalContent = memo(({
     modelOptions,
     startingBidRangeOptions,
     onlyFavourites,
-    onSelectMakeFilter,
-    onSelectModelFilter,
-    onToggleOnlyFavourites,
+    onChangeFilters,
     handleCloseFilterModal
 }: ModalContentProps) => {
 
@@ -224,21 +219,37 @@ const ModalContent = memo(({
                     styles({}).filterContainer,
                     styles({}).inlineStyle
                 ]}>
-                    <Text>Only Favourites</Text>
+                    <Text style={styles({}).filterLabel}>Only Favourites</Text>
                     <Toggle
                         isActive={onlyFavourites}
-                        onToggle={() => onToggleOnlyFavourites && onToggleOnlyFavourites()}
+                        onToggle={() => onChangeFilters && onChangeFilters(FilterFields.ONLY_FAVOURITES, !onlyFavourites)}
                     />
                 </View>
                 <View style={styles({}).filterContainer}>
-                    <Text>Filter by Starting Bid Range</Text>
-                    {/* Implement starting bid range filter UI here */}
-
+                    <Text style={styles({}).filterLabel}>Filter by Starting Bid Range</Text>
+                    <Input 
+                        label="Minimum Bid"
+                        keyboardType="numeric"
+                        value={startingBidRangeOptions.min?.toString() ?? ''}
+                        onChangeText={(text) => onChangeFilters && onChangeFilters(FilterFields.STARTING_BID_RANGE, {
+                            ...startingBidRangeOptions,
+                            min: text ? parseFloat(text) : null
+                        })}
+                    />
+                    <Input 
+                        label="Maximum Bid"
+                        keyboardType="numeric"
+                        value={startingBidRangeOptions.max?.toString() ?? ''}
+                        onChangeText={(text) => onChangeFilters && onChangeFilters(FilterFields.STARTING_BID_RANGE, {
+                            ...startingBidRangeOptions,
+                            max: text ? parseFloat(text) : null
+                        })}
+                    />
                 </View>
                 <View style={styles({}).filterContainer}>
-                    <Text>Filter by Make</Text>
+                    <Text style={styles({}).filterLabel}>Filter by Make</Text>
                     <RNPickerSelect
-                        onValueChange={(value) => onSelectMakeFilter && onSelectMakeFilter(value)}
+                        onValueChange={(value) => onChangeFilters && onChangeFilters(FilterFields.MAKE, value)}
                         items={makeOptions.map(option => ({
                             label: option,
                             value: option
@@ -249,9 +260,9 @@ const ModalContent = memo(({
                     />
                 </View>
                 <View style={styles({}).filterContainer}>
-                    <Text>Filter by Model</Text>
+                    <Text style={styles({}).filterLabel}>Filter by Model</Text>
                     <RNPickerSelect
-                        onValueChange={(value) => onSelectModelFilter && onSelectModelFilter(value)}
+                        onValueChange={(value) => onChangeFilters && onChangeFilters(FilterFields.MODEL, value)}
                         items={modelOptions.filter(option => option != null).map(option => ({
                             label: option,
                             value: option
@@ -261,10 +272,6 @@ const ModalContent = memo(({
                         disabled={modelOptions.length === 0}
                         style={pickerStyle}
                     />
-                </View>
-                <View style={styles({}).filterContainer}>
-                    <Text>Filter by Starting Bid Range</Text>
-                    {/* Implement starting bid range filter UI here */}
                 </View>
             </ScrollView>
         </View>
