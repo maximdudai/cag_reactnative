@@ -1,17 +1,19 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useCallback, useContext } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { FlatList, Text, View } from "react-native";
 import Item from "../../components/Item";
+import Skeleton from "../../components/skeleton";
 import { VehicleDataContext } from "../../context/DataContext";
 import { AppRoutes, MainRouteProps } from "../../root/routes";
 
 export default function MainPage() {
     const {
         isLoading,
-        vehicleData
+        vehicleData,
+        setIsLoading,
     } = useContext(VehicleDataContext);
-
     const navigation = useNavigation<MainRouteProps>();
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
 
     const handlePressItem = useCallback((vehicleId: string) => {
@@ -20,11 +22,24 @@ export default function MainPage() {
         });
     }, [navigation]);
 
+    const handleRefresh = useCallback(() => {
+        setIsRefreshing(true);
+        setIsLoading(true);
+        
+        // Simulate a refresh action
+        setTimeout(() => {
+            setIsRefreshing(false);
+            setIsLoading(false);
+        }, 2000);
+    }, [setIsLoading]);
+
     if (isLoading) {
         return (
-            <View>
-                <Text>Loading...</Text>
-            </View>
+            <>
+                {Array.from({ length: 4 }).map((_, index) => (
+                    <Skeleton key={index} />
+                ))}
+            </>
         )
     }
     return (
@@ -37,9 +52,18 @@ export default function MainPage() {
                     auctionDateTime={item.auctionDateTime}
                     imageUrl={item.imageUrl}
                     onPressItem={() => handlePressItem(item.id)}
+                    isFavorite={item.favourite}
                 />
             }
             keyboardDismissMode="on-drag"
+            ListEmptyComponent={
+                <View>
+                    <Text>No vehicles available</Text>
+                </View>
+            }
+            showsVerticalScrollIndicator={false}
+            refreshing={isRefreshing}
+            onRefresh={handleRefresh}
         />
     )
 }
