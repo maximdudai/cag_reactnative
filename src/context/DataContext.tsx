@@ -21,6 +21,7 @@ export default function VehicleDataProvider({
     );
 
     useEffect(() => {
+        setIsLoading(true);
         setVehicleData(vehicleDataWithIds);
 
         const initializeFavorites = async () => {
@@ -32,9 +33,18 @@ export default function VehicleDataProvider({
 
             const updatedList = Array.from(new Set([...storedFavorites, ...defaultFavorites]));
 
-
             setFavoriteVehicles(updatedList);
             await initializeFavoriteVehicles(updatedList);
+
+            // Update vehicle data to reflect favorite status
+            setVehicleData(prevData =>
+                prevData.map(veh => ({
+                    ...veh,
+                    favourite: updatedList.includes(veh.id || '')
+                }))
+            );
+            const randomBetweenTwoAndFive = Math.floor(Math.random() * (5 - 2 + 1)) + 2;
+            setTimeout(() => setIsLoading(false), randomBetweenTwoAndFive * 1000);
         };
 
         initializeFavorites();
