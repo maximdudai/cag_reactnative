@@ -15,10 +15,7 @@ export default function Item({
     imageUrl = PLACEHOLEDER_IMAGE
 }: ItemProps) {
 
-    console.log('auctionDateTime:', auctionDateTime);
     const { days, hours } = calculateDaysAndHours(auctionDateTime);
-
-    console.log(`Remaining Days: ${days}, Hours: ${hours}`);
 
     return (
         <View style={style.itemContainer}>

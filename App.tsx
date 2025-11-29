@@ -9,8 +9,8 @@ import { StatusBar, useColorScheme } from 'react-native';
 import {
   SafeAreaProvider
 } from 'react-native-safe-area-context';
-import MainPage from './src/pages/main';
 import VehicleDataProvider from './src/context/DataContext';
+import Root from './src/root';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -19,7 +19,7 @@ function App() {
     <SafeAreaProvider>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <VehicleDataProvider>
-        <MainPage />
+        <Root />
       </VehicleDataProvider>
     </SafeAreaProvider>
   );

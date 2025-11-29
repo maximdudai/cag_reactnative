@@ -2,6 +2,9 @@ import { FlatList, Text, View } from "react-native";
 import Item from "../../components/Item";
 import { VehicleDataContext } from "../../context/DataContext";
 import React, { useCallback, useContext } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { AppRoutes, MainRouteProps } from "../../root/routes";
+import { Vehicle } from "../../types/Vehicle";
 
 export default function MainPage() {
     const {
@@ -9,13 +12,14 @@ export default function MainPage() {
         vehicleData
     } = useContext(VehicleDataContext);
 
-    console.log("Vehicle Data:", vehicleData);
+    const navigation = useNavigation<MainRouteProps>();
 
-    
 
-    const handlePressItem = useCallback(() => {
-        console.log("Item pressed");
-    }, []);
+    const handlePressItem = useCallback((vehicle: Vehicle) => {
+        navigation.navigate(AppRoutes.DETAILS, {
+            vehicle: vehicle
+        });
+    }, [navigation]);
 
     if (isLoading) {
         return (
@@ -32,7 +36,7 @@ export default function MainPage() {
                 <Item
                     auctionDateTime={item.auctionDateTime}
                     imageUrl={item.imageUrl}
-                    onPressItem={handlePressItem}
+                    onPressItem={() => handlePressItem(item)}
                 />
             }
             keyboardDismissMode="on-drag"
