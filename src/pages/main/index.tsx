@@ -1,7 +1,9 @@
+import { useNavigation } from "@react-navigation/native";
+import React, { useCallback, useContext } from "react";
 import { FlatList, Text, View } from "react-native";
 import Item from "../../components/Item";
 import { VehicleDataContext } from "../../context/DataContext";
-import React, { useCallback, useContext } from "react";
+import { AppRoutes, MainRouteProps } from "../../root/routes";
 
 export default function MainPage() {
     const {
@@ -9,10 +11,14 @@ export default function MainPage() {
         vehicleData
     } = useContext(VehicleDataContext);
 
+    const navigation = useNavigation<MainRouteProps>();
 
-    const handlePressItem = useCallback((item: any) => {
-        console.log("Item pressed", item);
-    }, []);
+
+    const handlePressItem = useCallback((vehicleId: string) => {
+        navigation.navigate(AppRoutes.DETAILS, {
+            vehicleId: vehicleId
+        });
+    }, [navigation]);
 
     if (isLoading) {
         return (
@@ -27,11 +33,10 @@ export default function MainPage() {
             keyExtractor={item => item.id}
             renderItem={({ item }) =>
                 <Item
-                    key={item.id}
+                    key={`${item.model}-${item.mileage}-${item.id}`}
                     auctionDateTime={item.auctionDateTime}
                     imageUrl={item.imageUrl}
-                    onPressItem={() => handlePressItem(item)}
-                    isFavorite={item.favourite}
+                    onPressItem={() => handlePressItem(item.id)}
                 />
             }
             keyboardDismissMode="on-drag"
