@@ -49,8 +49,8 @@ export default function Item({
 const style = StyleSheet.create({
     container: {
         flexDirection: 'row',
-        backgroundColor: '#2a2a2a',
-        borderRadius: 8,
+        backgroundColor: defaultStyles.BACKGROUND_DARK,
+        borderRadius: defaultStyles.BORDER_RADIUS_MEDIUM,
         marginVertical: 6,
         marginHorizontal: defaultStyles.MEDIUM_MARGIN,
         overflow: 'hidden',
@@ -59,7 +59,7 @@ const style = StyleSheet.create({
     itemImage: {
         width: 120,
         height: '100%',
-        backgroundColor: '#1a1a1a',
+        backgroundColor: defaultStyles.BACKGROUND_DARKER,
     },
     contentContainer: {
         flex: 1,
@@ -72,19 +72,19 @@ const style = StyleSheet.create({
         justifyContent: 'space-between',
     },
     vehicleTitle: {
-        fontSize: 16,
+        fontSize: defaultStyles.FONT_SIZE_MEDIUM,
         fontWeight: '600',
-        color: '#ffffff',
+        color: defaultStyles.TEXT_PRIMARY,
         flex: 1,
     },
     favoriteIcon: {
         fontSize: 18,
-        color: '#FFD700',
-        marginLeft: 8,
+        color: defaultStyles.ACCENT_GOLD,
+        marginLeft: defaultStyles.SMALL_MARGIN,
     },
     detailText: {
         fontSize: 13,
-        color: '#aaa',
+        color: defaultStyles.TEXT_SECONDARY,
         marginTop: 2,
     },
     bottomRow: {
@@ -93,10 +93,10 @@ const style = StyleSheet.create({
         alignItems: 'center',
     },
     timeDisplay: {
-        backgroundColor: '#1a1a1a',
-        paddingHorizontal: 8,
+        backgroundColor: defaultStyles.BACKGROUND_DARKER,
+        paddingHorizontal: defaultStyles.SMALL_MARGIN,
         paddingVertical: 4,
-        borderRadius: 4,
+        borderRadius: defaultStyles.BORDER_RADIUS_SMALL,
     },
     timeValue: {
         fontSize: 13,
@@ -104,8 +104,8 @@ const style = StyleSheet.create({
         color: defaultStyles.PRIMARY_COLOR,
     },
     priceText: {
-        fontSize: 16,
+        fontSize: defaultStyles.FONT_SIZE_MEDIUM,
         fontWeight: 'bold',
-        color: '#FFD700',
+        color: defaultStyles.ACCENT_GOLD,
     },
 });
