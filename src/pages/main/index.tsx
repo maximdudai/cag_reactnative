@@ -146,10 +146,8 @@ export default function MainPage() {
                 renderItem={({ item }) =>
                     <Item
                         key={`${item.model}-${item.mileage}-${item.id}`}
-                        auctionDateTime={item.auctionDateTime}
-                        imageUrl={item.imageUrl}
+                        vehicleData={item}
                         onPressItem={() => handlePressItem(item.id)}
-                        isFavorite={item.favourite}
                     />
                 }
                 keyboardDismissMode="on-drag"
@@ -162,6 +160,7 @@ export default function MainPage() {
                 showsVerticalScrollIndicator={false}
                 refreshing={isRefreshing}
                 onRefresh={handleRefresh}
+                maxToRenderPerBatch={7}
             />
             {
                 isFilterModalVisible &&

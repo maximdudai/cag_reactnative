@@ -8,4 +8,15 @@ export const defaultStyles = {
     FONT_SIZE_LARGE: 20,
     
     PRIMARY_COLOR: '#00a94e',
+    BACKGROUND_DARK: '#2a2a2a',
+    BACKGROUND_DARKER: '#1a1a1a',
+    BACKGROUND_MEDIUM: '#3a3a3a',
+    TEXT_PRIMARY: '#ffffff',
+    TEXT_SECONDARY: '#aaa',
+    TEXT_TERTIARY: '#888',
+    ACCENT_GOLD: '#FFD700',
+
+    BORDER_RADIUS_SMALL: 4,
+    BORDER_RADIUS_MEDIUM: 8,
+    BORDER_RADIUS_LARGE: 12,
 }
