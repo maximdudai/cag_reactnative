@@ -18,6 +18,7 @@ import Input from "../../components/Input";
 
 export default function MainPage() {
     const {
+        error,
         isLoading,
         vehicleData: originalVehicleData,
         favoriteVehicles,
@@ -37,6 +38,16 @@ export default function MainPage() {
         },
         onlyFavourites: false
     })
+
+    useEffect(() => {
+        const getFilteredVehicleList = filterVehicleList({
+            vehicleData: originalVehicleData,
+            filterList,
+            favoriteVehicles
+        })
+
+        setFilteredVehicleData(getFilteredVehicleList);
+    }, [filterList, originalVehicleData, favoriteVehicles]);
 
 
     const handlePressItem = useCallback((vehicleId: string) => {
@@ -75,16 +86,6 @@ export default function MainPage() {
         ));
     }, [originalVehicleData, filterList.make]);
 
-    useEffect(() => {
-        const getFilteredVehicleList = filterVehicleList({
-            vehicleData: originalVehicleData,
-            filterList,
-            favoriteVehicles
-        })
-
-        setFilteredVehicleData(getFilteredVehicleList);
-    }, [filterList, originalVehicleData, favoriteVehicles]);
-
     const handleChangeFilters = useCallback((field: FilterFields, value: any) => {
         setFilterList(prevFilters => ({
             ...prevFilters,
@@ -120,6 +121,13 @@ export default function MainPage() {
         });
     }, []);
 
+    if (error) {
+        return (
+            <View style={styles({}).errorContainer}>
+                <Text style={styles({}).errorText}>Error: {error}</Text>
+            </View>
+        );
+    }
     if (isLoading) {
         return (
             <>
@@ -139,13 +147,38 @@ export default function MainPage() {
                     onPress={handleFilterModal}
                     type={ButtonType.SECONDARY}
                 />
+                <ScrollView
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                    fadingEdgeLength={10}
+                >
+                    {
+                        filterList.onlyFavourites &&
+                        <Text style={styles({}).filterTag}>favorites</Text>
+                    }
+                    {
+                        filterList.make &&
+                        <Text style={styles({}).filterTag}>make: {filterList.make}</Text>
+                    }
+                    {
+                        filterList.model &&
+                        <Text style={styles({}).filterTag}>model: {filterList.model}</Text>
+                    }
+                    {
+                        filterList.startingBidRange.min != null &&
+                        <Text style={styles({}).filterTag}>min bid: {filterList.startingBidRange.min}</Text>
+                    }
+                    {
+                        filterList.startingBidRange.max != null &&
+                        <Text style={styles({}).filterTag}>max bid: {filterList.startingBidRange.max}</Text>
+                    }
+                </ScrollView>
             </View>
             <FlatList
                 data={filteredVehicleData}
                 keyExtractor={item => item.id}
                 renderItem={({ item }) =>
                     <Item
-                        key={`${item.model}-${item.mileage}-${item.id}`}
                         vehicleData={item}
                         onPressItem={() => handlePressItem(item.id)}
                     />
@@ -226,7 +259,7 @@ const ModalContent = memo(({
                 </View>
                 <View style={styles({}).filterContainer}>
                     <Text style={styles({}).filterLabel}>Filter by Starting Bid Range</Text>
-                    <Input 
+                    <Input
                         label="Minimum Bid"
                         keyboardType="numeric"
                         value={startingBidRangeOptions.min?.toString() ?? ''}
@@ -235,7 +268,7 @@ const ModalContent = memo(({
                             min: text ? parseFloat(text) : null
                         })}
                     />
-                    <Input 
+                    <Input
                         label="Maximum Bid"
                         keyboardType="numeric"
                         value={startingBidRangeOptions.max?.toString() ?? ''}

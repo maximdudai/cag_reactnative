@@ -88,8 +88,6 @@ export async function initializeFavoriteVehicles(vehicleIds: string[]): Promise<
 
         const favoriteVehiclesList = Object.fromEntries(favoriteVehicleList);
 
-        console.log('Storing initial favorite vehicles:', favoriteVehiclesList);
-
         await AsyncStorage.setItem(StorageKeys.FAVORITE_VEHICLES, JSON.stringify(favoriteVehiclesList));
     } catch (error) {
         console.error("Error initializing favorite vehicles:", error);

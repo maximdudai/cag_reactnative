@@ -3,11 +3,12 @@ import calculateDaysAndHours from "../tools/date";
 import { defaultStyles } from "./styles/main";
 import { Vehicle } from "../types/Vehicle";
 import { formatCurrency } from "../tools/number";
+import { memo } from "react";
 
 
 const PLACEHOLEDER_IMAGE = "https://www.shutterstock.com/image-vector/car-logo-icon-emblem-design-600nw-473088037.jpg";
 
-export default function Item({
+export default memo(function Item({
     vehicleData,
     onPressItem,
 }: {
@@ -21,7 +22,7 @@ export default function Item({
     return (
         <TouchableOpacity onPress={onPressItem} style={style.container}>
             <Image source={{ uri: vehicleData.imageUrl || PLACEHOLEDER_IMAGE }} style={style.itemImage} />
-            
+
             <View style={style.contentContainer}>
                 <View style={style.titleRow}>
                     <Text style={style.vehicleTitle} numberOfLines={1}>
@@ -42,9 +43,10 @@ export default function Item({
                     <Text style={style.priceText}>{startingBidPrice}</Text>
                 </View>
             </View>
-        </TouchableOpacity>
+        </TouchableOpacity >
     )
-}
+});
+
 
 const style = StyleSheet.create({
     container: {
