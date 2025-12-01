@@ -21,22 +21,48 @@ export default function filterVehicleList({
     filterList,
     favoriteVehicles
 }: FilterTypes): Vehicle[] {
+    const hasFilters = 
+        filterList.make ||
+        filterList.model ||
+        filterList.startingBidRange?.min != null ||
+        filterList.startingBidRange?.max != null ||
+        filterList.onlyFavourites;
+
+    if (!hasFilters) {
+        return vehicleData;
+    }
+
+    const shouldFilterMake = !!filterList.make;
+    const shouldFilterModel = !!filterList.model;
+    const shouldFilterMinBid = filterList.startingBidRange?.min != null;
+    const shouldFilterMaxBid = filterList.startingBidRange?.max != null;
+    const shouldFilterFavourites = !!filterList.onlyFavourites;
+
+    const favoritesSet = shouldFilterFavourites 
+        ? new Set(favoriteVehicles) 
+        : null;
+
     return vehicleData.filter((vehicle: Vehicle) => {
-        const matchesMake = filterList.make ? vehicle.make === filterList.make : true;
+        if (shouldFilterMake && vehicle.make !== filterList.make) {
+            return false;
+        }
         
-        const matchesModel = filterList.model ? vehicle.model === filterList.model : true;
+        if (shouldFilterModel && vehicle.model !== filterList.model) {
+            return false;
+        }
         
-        const matchesStartingBidMin = filterList.startingBidRange?.min != null
-            ? vehicle.startingBid >= filterList.startingBidRange.min
-            : true;
-        const matchesStartingBidMax = filterList.startingBidRange?.max != null
-            ? vehicle.startingBid <= filterList.startingBidRange.max
-            : true;
+        if (shouldFilterMinBid && vehicle.startingBid < filterList.startingBidRange!.min!) {
+            return false;
+        }
         
-        const matchesFavourite = filterList.onlyFavourites
-            ? favoriteVehicles.includes(vehicle.id || '')
-            : true;
+        if (shouldFilterMaxBid && vehicle.startingBid > filterList.startingBidRange!.max!) {
+            return false;
+        }
         
-        return matchesMake && matchesModel && matchesStartingBidMin && matchesStartingBidMax && matchesFavourite;
+        if (shouldFilterFavourites && !favoritesSet!.has(vehicle.id ?? '')) {
+            return false;
+        }
+        
+        return true;
     });
 }
