@@ -1,101 +1,123 @@
-<<<<<<< HEAD
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# 🚗 Vehicle Auction App
 
-# Getting Started
+A React Native application for browsing and filtering vehicle auctions, built as a technical assessment for a React Native Developer position. 
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## 📱 Demo
 
-## Step 1: Start Metro
+<!-- Add your video presentation here -->
+- video_link
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+---
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+## 📋 Project Overview
 
-```sh
-# Using npm
-npm start
+This application loads and displays vehicle data from a large JSON dataset containing auction information.  Users can browse vehicles, filter results, mark favourites, and view detailed information about each vehicle.
 
-# OR using Yarn
-yarn start
+## ✨ Features
+
+- **Auction Countdown**: Each vehicle displays the number of days and hours until its auction begins
+- **Favourites System**: Users can favourite/unfavourite vehicles with visual indication
+- **Advanced Filtering**:
+  - Filter by Make
+  - Filter by Model
+  - Filter by Starting Bid range
+  - Show only favourite vehicles
+- **Vehicle Details Page**: Click on any vehicle to view comprehensive details
+
+## 🛠️ Tech Stack
+
+- **React Native** 0.82.1
+- **React** 19.1. 1
+- **TypeScript** 5. 8.3
+- **React Navigation** (Native Stack) - Navigation between screens
+- **AsyncStorage** - Persistent storage for favourites
+- **date-fns** - Date/time calculations for auction countdown
+- **React Native Picker** - Filter dropdown components
+
+## 📁 Project Structure
+
+```
+src/
+├── components/     # Reusable UI components
+├── context/        # React Context for state management (VehicleDataProvider)
+├── data/           # Vehicle JSON data
+├── pages/          # Screen components
+├── root/           # App root/navigation setup
+├── tools/          # Utility functions
+└── types/          # TypeScript type definitions
 ```
 
-## Step 2: Build and run your app
+## 🚀 Getting Started
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+### Prerequisites
 
-### Android
+- Node.js >= 20
+- React Native CLI
+- Xcode (for iOS)
+- Android Studio (for Android)
 
-```sh
-# Using npm
+### Installation
+
+1. Clone the repository:
+```bash
+git clone https://github. com/maximdudai/cag_reactnative.git
+cd cag_reactnative
+```
+
+2. Install dependencies:
+```bash
+npm install
+# or
+pnpm install
+```
+
+3. Install iOS pods (iOS only):
+```bash
+cd ios && pod install && cd ..
+```
+
+### Running the App
+
+**Android:**
+```bash
 npm run android
-
-# OR using Yarn
-yarn android
 ```
 
-### iOS
-
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
+**iOS:**
+```bash
 npm run ios
-
-# OR using Yarn
-yarn ios
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+**Start Metro bundler:**
+```bash
+npm start
+```
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+## 📊 Vehicle Data Properties
 
-## Step 3: Modify your app
+Each vehicle in the dataset contains:
 
-Now that you have successfully run the app, let's make changes!
+| Property | Description |
+|----------|-------------|
+| Make | Vehicle manufacturer |
+| Model | Vehicle model name |
+| Engine Size | Engine capacity |
+| Fuel Type | Type of fuel used |
+| Year | Year of manufacture |
+| Mileage | Total miles driven |
+| Auction Date and Time | When the auction begins |
+| Starting Bid | Initial bid amount |
+| Favourite | User's favourite status |
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+## 📝 Available Scripts
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+| Script | Description |
+|--------|-------------|
+| `npm run android` | Run on Android device/emulator |
+| `npm run ios` | Run on iOS simulator |
+| `npm start` | Start Metro bundler |
+| `npm run lint` | Run ESLint |
+| `npm test` | Run Jest tests |
 
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
-=======
-# cag_reactnative
->>>>>>> b1b86f7b81b4c2a7b910d9e041aa421f3eafe439
+---
