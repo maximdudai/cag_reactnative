@@ -4,8 +4,7 @@ A React Native application for browsing and filtering vehicle auctions, built as
 
 ## 📱 Demo
 
-<!-- Add your video presentation here -->
-- video_link
+https://github.com/user-attachments/assets/71c7a987-2154-4d05-881b-c72c42141a36
 
 ---
 
