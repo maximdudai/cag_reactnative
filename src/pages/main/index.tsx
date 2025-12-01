@@ -121,6 +121,13 @@ export default function MainPage() {
         });
     }, []);
 
+    if (error) {
+        return (
+            <View style={styles({}).errorContainer}>
+                <Text style={styles({}).errorText}>Error: {error}</Text>
+            </View>
+        );
+    }
     if (isLoading) {
         return (
             <>
@@ -130,15 +137,6 @@ export default function MainPage() {
             </>
         )
     }
-
-    if (error) {
-        return (
-            <View style={styles({}).errorContainer}>
-                <Text style={styles({}).errorText}>Error: {error}</Text>
-            </View>
-        );
-    }
-
     return (
         <>
             <View
@@ -149,13 +147,38 @@ export default function MainPage() {
                     onPress={handleFilterModal}
                     type={ButtonType.SECONDARY}
                 />
+                <ScrollView
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                    fadingEdgeLength={10}
+                >
+                    {
+                        filterList.onlyFavourites &&
+                        <Text style={styles({}).filterTag}>favorites</Text>
+                    }
+                    {
+                        filterList.make &&
+                        <Text style={styles({}).filterTag}>make: {filterList.make}</Text>
+                    }
+                    {
+                        filterList.model &&
+                        <Text style={styles({}).filterTag}>model: {filterList.model}</Text>
+                    }
+                    {
+                        filterList.startingBidRange.min != null &&
+                        <Text style={styles({}).filterTag}>min bid: {filterList.startingBidRange.min}</Text>
+                    }
+                    {
+                        filterList.startingBidRange.max != null &&
+                        <Text style={styles({}).filterTag}>max bid: {filterList.startingBidRange.max}</Text>
+                    }
+                </ScrollView>
             </View>
             <FlatList
                 data={filteredVehicleData}
                 keyExtractor={item => item.id}
                 renderItem={({ item }) =>
                     <Item
-                        key={`${item.model}-${item.mileage}-${item.id}`}
                         vehicleData={item}
                         onPressItem={() => handlePressItem(item.id)}
                     />

@@ -38,6 +38,16 @@ export const styles = ({
         fontSize: defaultStyles.FONT_SIZE_MEDIUM,
         fontWeight: 'bold',
     },
+    filterTag: {
+        fontSize: defaultStyles.FONT_SIZE_SMALL,
+        backgroundColor: defaultStyles.BACKGROUND_DARK,
+        color: defaultStyles.TEXT_PRIMARY,
+        paddingHorizontal: defaultStyles.SMALL_MARGIN,
+        paddingVertical: 4,
+        borderRadius: defaultStyles.BORDER_RADIUS_SMALL,
+        marginRight: defaultStyles.SMALL_MARGIN,
+        marginTop: defaultStyles.SMALL_MARGIN,
+    },
     inlineStyle: {
         display: 'flex',
         flexDirection: 'row',
