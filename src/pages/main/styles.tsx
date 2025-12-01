@@ -1,0 +1,91 @@
+import { StyleSheet } from 'react-native';
+import { defaultStyles } from '../../components/styles/main';
+
+export const styles = ({
+
+}) => StyleSheet.create({
+    listEmptyComponent: {
+        alignItems: 'center',
+        marginTop: 50,
+    },
+    filterButtonContainer: {
+        padding: defaultStyles.LARGE_MARGIN,
+    },
+    modalContainer: {
+        display: 'flex',
+        gap: defaultStyles.MEDIUM_MARGIN,
+    },
+    modalBody: {
+        marginVertical: defaultStyles.MEDIUM_MARGIN,
+    },
+    modalHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 20,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
+        paddingBottom: 10
+    },
+    filterContainer: {
+        marginBottom: defaultStyles.LARGE_MARGIN,
+        borderBottomWidth: 1,
+        borderColor: '#ccc',
+        padding: defaultStyles.SMALL_MARGIN,
+        borderRadius: 5,
+    },
+    filterLabel: {
+        fontSize: defaultStyles.FONT_SIZE_MEDIUM,
+        fontWeight: 'bold',
+    },
+    filterTag: {
+        fontSize: defaultStyles.FONT_SIZE_SMALL,
+        backgroundColor: defaultStyles.BACKGROUND_DARK,
+        color: defaultStyles.TEXT_PRIMARY,
+        paddingHorizontal: defaultStyles.SMALL_MARGIN,
+        paddingVertical: 4,
+        borderRadius: defaultStyles.BORDER_RADIUS_SMALL,
+        marginRight: defaultStyles.SMALL_MARGIN,
+        marginTop: defaultStyles.SMALL_MARGIN,
+    },
+    inlineStyle: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+    modalFooter: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    errorContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    errorText: {
+        color: defaultStyles.ERROR_COLOR,
+        fontSize: defaultStyles.FONT_SIZE_MEDIUM,
+        fontWeight: 'bold',
+    }
+})
+
+export const pickerStyle = {
+    inputAndroid: {
+        fontSize: defaultStyles.FONT_SIZE_SMALL,
+        borderWidth: 1,
+        borderColor: 'gray',
+        color: 'black',
+    },
+    inputAndroidContainer: {
+        // Add container styles here
+    },
+    iconContainer: {
+        top: 20,
+        right: 10,
+        color: defaultStyles.PRIMARY_COLOR,
+    },
+    placeholder: {
+        color: 'gray',
+    },
+};

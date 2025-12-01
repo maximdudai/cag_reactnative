@@ -1,0 +1,23 @@
+export const defaultStyles = {
+    SMALL_MARGIN: 8,
+    MEDIUM_MARGIN: 16,
+    LARGE_MARGIN: 24,
+
+    FONT_SIZE_SMALL: 12,
+    FONT_SIZE_MEDIUM: 16,
+    FONT_SIZE_LARGE: 20,
+    
+    PRIMARY_COLOR: '#00a94e',
+    BACKGROUND_DARK: '#2a2a2a',
+    BACKGROUND_DARKER: '#1a1a1a',
+    BACKGROUND_MEDIUM: '#3a3a3a',
+    TEXT_PRIMARY: '#ffffff',
+    TEXT_SECONDARY: '#aaa',
+    TEXT_TERTIARY: '#888',
+    ACCENT_GOLD: '#FFD700',
+    ERROR_COLOR: '#ff4d4d',
+
+    BORDER_RADIUS_SMALL: 4,
+    BORDER_RADIUS_MEDIUM: 8,
+    BORDER_RADIUS_LARGE: 12,
+}
