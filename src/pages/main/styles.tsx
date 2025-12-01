@@ -47,6 +47,16 @@ export const styles = ({
     modalFooter: {
         flexDirection: 'row',
         justifyContent: 'space-between'
+    },
+    errorContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    errorText: {
+        color: defaultStyles.ERROR_COLOR,
+        fontSize: defaultStyles.FONT_SIZE_MEDIUM,
+        fontWeight: 'bold',
     }
 })
 

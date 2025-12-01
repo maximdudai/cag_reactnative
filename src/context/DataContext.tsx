@@ -1,5 +1,4 @@
-import { createContext, useEffect, useMemo, useState } from "react";
-import vehicleMockData from "../data/vehicles.json";
+import { createContext, useEffect, useState } from "react";
 import { getListOfFavoriteVehicles, initializeFavoriteVehicles } from "../tools/storage";
 import { Vehicle } from "../types/Vehicle";
 
@@ -8,53 +7,58 @@ export const VehicleDataContext = createContext([] as any);
 export default function VehicleDataProvider({
     children
 }: { children: React.ReactNode }) {
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [vehicleData, setVehicleData] = useState<Vehicle[]>([]);
     const [favoriteVehicles, setFavoriteVehicles] = useState<string[]>([]);
-
-    const vehicleDataWithIds = useMemo(() =>
-        vehicleMockData.map((vehicle, index) => ({
-            ...vehicle,
-            id: `vehicle-${index}`
-        })),
-        []
-    );
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        setIsLoading(true);
-        setVehicleData(vehicleDataWithIds);
+        const loadData = async () => {
+            try {
+                setIsLoading(true);
+                setError(null);
 
-        const initializeFavorites = async () => {
-            const storedFavorites = await getListOfFavoriteVehicles();
+                const vehicleMockData = await import("../data/vehicles.json");
+                const data = vehicleMockData.default || vehicleMockData;
 
-            const defaultFavorites = vehicleDataWithIds
-                .filter(vehicle => vehicle.favourite)
-                .map(veh => veh.id);
+                const vehicleDataWithIds = data.map((vehicle: Vehicle, index: number) => ({
+                    ...vehicle,
+                    id: `vehicle-${index}`
+                }));
 
-            const updatedList = Array.from(new Set([...storedFavorites, ...defaultFavorites]));
+                const storedFavorites = await getListOfFavoriteVehicles();
 
-            setFavoriteVehicles(updatedList);
-            await initializeFavoriteVehicles(updatedList);
+                const defaultFavorites = vehicleDataWithIds
+                    .filter((vehicle: any) => vehicle.favourite)
+                    .map((veh: any) => veh.id);
 
-            // Update vehicle data to reflect favorite status
-            setVehicleData(prevData =>
-                prevData.map(veh => ({
+                const updatedList = Array.from(new Set([...storedFavorites, ...defaultFavorites]));
+
+                setFavoriteVehicles(updatedList);
+                await initializeFavoriteVehicles(updatedList);
+
+                const finalData = vehicleDataWithIds.map((veh: Vehicle) => ({
                     ...veh,
                     favourite: updatedList.includes(veh.id || '')
-                }))
-            );
-            const randomBetweenTwoAndFive = Math.floor(Math.random() * (5 - 2 + 1)) + 2;
-            setTimeout(() => setIsLoading(false), randomBetweenTwoAndFive * 1000);
+                }));
+
+                setVehicleData(finalData);
+            } catch (err) {
+                setError(err instanceof Error ? err.message : 'Failed to load vehicle data');
+                console.error('Error loading vehicle data:', err);
+            } finally {
+                setIsLoading(false);
+            }
         };
 
-        initializeFavorites();
-    }, [vehicleDataWithIds]);
+        loadData();
+    }, []);
 
     const updateVehicleData = (vehicle: Vehicle) => {
         setVehicleData((prevData) =>
             prevData.map((veh) => veh.id === vehicle.id ? vehicle : veh)
         );
-    }
+    };
 
     return (
         <VehicleDataContext.Provider
@@ -62,6 +66,7 @@ export default function VehicleDataProvider({
                 isLoading,
                 vehicleData,
                 favoriteVehicles,
+                error,
                 setVehicleData,
                 setIsLoading,
                 setFavoriteVehicles,
@@ -70,5 +75,5 @@ export default function VehicleDataProvider({
         >
             {children}
         </VehicleDataContext.Provider>
-    )
+    );
 }

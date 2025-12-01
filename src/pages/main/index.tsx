@@ -18,6 +18,7 @@ import Input from "../../components/Input";
 
 export default function MainPage() {
     const {
+        error,
         isLoading,
         vehicleData: originalVehicleData,
         favoriteVehicles,
@@ -37,6 +38,16 @@ export default function MainPage() {
         },
         onlyFavourites: false
     })
+
+    useEffect(() => {
+        const getFilteredVehicleList = filterVehicleList({
+            vehicleData: originalVehicleData,
+            filterList,
+            favoriteVehicles
+        })
+
+        setFilteredVehicleData(getFilteredVehicleList);
+    }, [filterList, originalVehicleData, favoriteVehicles]);
 
 
     const handlePressItem = useCallback((vehicleId: string) => {
@@ -74,16 +85,6 @@ export default function MainPage() {
                 .map((vehicle: Vehicle) => vehicle.model)
         ));
     }, [originalVehicleData, filterList.make]);
-
-    useEffect(() => {
-        const getFilteredVehicleList = filterVehicleList({
-            vehicleData: originalVehicleData,
-            filterList,
-            favoriteVehicles
-        })
-
-        setFilteredVehicleData(getFilteredVehicleList);
-    }, [filterList, originalVehicleData, favoriteVehicles]);
 
     const handleChangeFilters = useCallback((field: FilterFields, value: any) => {
         setFilterList(prevFilters => ({
@@ -129,6 +130,15 @@ export default function MainPage() {
             </>
         )
     }
+
+    if (error) {
+        return (
+            <View style={styles({}).errorContainer}>
+                <Text style={styles({}).errorText}>Error: {error}</Text>
+            </View>
+        );
+    }
+
     return (
         <>
             <View
@@ -226,7 +236,7 @@ const ModalContent = memo(({
                 </View>
                 <View style={styles({}).filterContainer}>
                     <Text style={styles({}).filterLabel}>Filter by Starting Bid Range</Text>
-                    <Input 
+                    <Input
                         label="Minimum Bid"
                         keyboardType="numeric"
                         value={startingBidRangeOptions.min?.toString() ?? ''}
@@ -235,7 +245,7 @@ const ModalContent = memo(({
                             min: text ? parseFloat(text) : null
                         })}
                     />
-                    <Input 
+                    <Input
                         label="Maximum Bid"
                         keyboardType="numeric"
                         value={startingBidRangeOptions.max?.toString() ?? ''}

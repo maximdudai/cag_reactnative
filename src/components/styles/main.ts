@@ -15,6 +15,7 @@ export const defaultStyles = {
     TEXT_SECONDARY: '#aaa',
     TEXT_TERTIARY: '#888',
     ACCENT_GOLD: '#FFD700',
+    ERROR_COLOR: '#ff4d4d',
 
     BORDER_RADIUS_SMALL: 4,
     BORDER_RADIUS_MEDIUM: 8,
