@@ -1,81 +1,111 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import calculateDaysAndHours from "../tools/date";
 import { defaultStyles } from "./styles/main";
+import { Vehicle } from "../types/Vehicle";
+import { formatCurrency } from "../tools/number";
 
-type ItemProps = {
-    auctionDateTime: string;
-    imageUrl?: string;
-    onPressItem?: () => void;
-    isFavorite?: boolean;
-}
 
 const PLACEHOLEDER_IMAGE = "https://www.shutterstock.com/image-vector/car-logo-icon-emblem-design-600nw-473088037.jpg";
 
 export default function Item({
-    auctionDateTime,
+    vehicleData,
     onPressItem,
-    imageUrl = PLACEHOLEDER_IMAGE,
-    isFavorite
-}: ItemProps) {
+}: {
+    vehicleData: Vehicle,
+    onPressItem: () => void,
+}) {
 
-    const { days, hours } = calculateDaysAndHours(auctionDateTime);
+    const { days, hours } = calculateDaysAndHours(vehicleData.auctionDateTime);
+    const startingBidPrice = formatCurrency(vehicleData.startingBid);
 
     return (
-        <View style={style.container}>
-            <TouchableOpacity onPress={onPressItem} style={style.itemContainer}>
-                <Image source={{ uri: imageUrl }} style={style.itemImage} />
-                <View style={style.itemDetails}>
-                    <Text style={style.itemText}>Bid starts in</Text>
-                    <Text style={style.itemText}>Days: {days}</Text>
-                    <Text style={style.itemText}>Hours: {hours}</Text>
-                    {
-                        isFavorite &&
-                        <Text style={style.favoriteBadge}>
-                            favorite
-                        </Text>
-                    }
+        <TouchableOpacity onPress={onPressItem} style={style.container}>
+            <Image source={{ uri: vehicleData.imageUrl || PLACEHOLEDER_IMAGE }} style={style.itemImage} />
+            
+            <View style={style.contentContainer}>
+                <View style={style.titleRow}>
+                    <Text style={style.vehicleTitle} numberOfLines={1}>
+                        {vehicleData.make} {vehicleData.model}
+                    </Text>
+                    {vehicleData.favourite && (
+                        <Text style={style.favoriteIcon}>★</Text>
+                    )}
                 </View>
-            </TouchableOpacity>
-        </View>
+
+                <Text style={style.detailText}>{vehicleData.year} - {vehicleData.fuel} - {vehicleData.engineSize}</Text>
+                <Text style={style.detailText}>{vehicleData.mileage.toLocaleString()} mi</Text>
+
+                <View style={style.bottomRow}>
+                    <View style={style.timeDisplay}>
+                        <Text style={style.timeValue}>{days}d : {hours}h</Text>
+                    </View>
+                    <Text style={style.priceText}>{startingBidPrice}</Text>
+                </View>
+            </View>
+        </TouchableOpacity>
     )
 }
 
 const style = StyleSheet.create({
     container: {
-        flexDirection: 'column',
-        alignItems: 'flex-start',
-        margin: defaultStyles.MEDIUM_MARGIN,
-        backgroundColor: '#484848',
-        borderRadius: 8
-    },
-    itemContainer: {
-        display: 'flex',
         flexDirection: 'row',
-        gap: defaultStyles.MEDIUM_MARGIN,
+        backgroundColor: defaultStyles.BACKGROUND_DARK,
+        borderRadius: defaultStyles.BORDER_RADIUS_MEDIUM,
+        marginVertical: 6,
+        marginHorizontal: defaultStyles.MEDIUM_MARGIN,
+        overflow: 'hidden',
+        height: 110,
     },
     itemImage: {
-        width: 150,
-        height: 150,
-        borderRadius: 8
+        width: 120,
+        height: '100%',
+        backgroundColor: defaultStyles.BACKGROUND_DARKER,
     },
-    itemText: {
-        fontSize: 16,
-        color: 'white',
-        marginTop: defaultStyles.SMALL_MARGIN
+    contentContainer: {
+        flex: 1,
+        padding: 10,
+        justifyContent: 'space-between',
     },
-    itemDetails: {
-        position: 'relative',
-        width: '100%',
+    titleRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
     },
-    favoriteBadge: {
-        position: 'absolute',
-        bottom: 0,
-        right: 165,
-        padding: 4,
-        backgroundColor: '#FFD700',
-        borderBottomRightRadius: 8,
-        fontSize: defaultStyles.FONT_SIZE_SMALL,
+    vehicleTitle: {
+        fontSize: defaultStyles.FONT_SIZE_MEDIUM,
+        fontWeight: '600',
+        color: defaultStyles.TEXT_PRIMARY,
+        flex: 1,
+    },
+    favoriteIcon: {
+        fontSize: 18,
+        color: defaultStyles.ACCENT_GOLD,
+        marginLeft: defaultStyles.SMALL_MARGIN,
+    },
+    detailText: {
+        fontSize: 13,
+        color: defaultStyles.TEXT_SECONDARY,
+        marginTop: 2,
+    },
+    bottomRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    timeDisplay: {
+        backgroundColor: defaultStyles.BACKGROUND_DARKER,
+        paddingHorizontal: defaultStyles.SMALL_MARGIN,
+        paddingVertical: 4,
+        borderRadius: defaultStyles.BORDER_RADIUS_SMALL,
+    },
+    timeValue: {
+        fontSize: 13,
+        fontWeight: '600',
+        color: defaultStyles.PRIMARY_COLOR,
+    },
+    priceText: {
+        fontSize: defaultStyles.FONT_SIZE_MEDIUM,
         fontWeight: 'bold',
-        textTransform: 'uppercase',
-    }
+        color: defaultStyles.ACCENT_GOLD,
+    },
 });
