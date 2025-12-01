@@ -1,8 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { memo, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import React, { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { FlatList, ScrollView, Text, View } from "react-native";
 import RNPickerSelect from 'react-native-picker-select';
 import Button, { ButtonType } from "../../components/Button";
+import Input from "../../components/Input";
 import Item from "../../components/Item";
 import Modal from "../../components/Modal";
 import Skeleton from "../../components/Skeleton";
@@ -13,7 +14,6 @@ import filterVehicleList from "../../tools/filter";
 import { Vehicle } from "../../types/Vehicle";
 import { FilterFields, ModalContentProps, ModalFooterProps } from "./props";
 import { pickerStyle, styles } from "./styles";
-import Input from "../../components/Input";
 
 
 export default function MainPage() {
@@ -28,7 +28,7 @@ export default function MainPage() {
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
     const [filteredVehicleData, setFilteredVehicleData] = useState(originalVehicleData);
-
+    const refreshTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const [filterList, setFilterList] = useState({
         make: '',
         model: '',
@@ -40,6 +40,14 @@ export default function MainPage() {
     })
 
     useEffect(() => {
+        return () => {
+            if (refreshTimeoutRef.current) {
+                clearTimeout(refreshTimeoutRef.current);
+            }
+        };
+    }, []);
+
+    useEffect(() => {
         const getFilteredVehicleList = filterVehicleList({
             vehicleData: originalVehicleData,
             filterList,
@@ -47,7 +55,7 @@ export default function MainPage() {
         })
 
         setFilteredVehicleData(getFilteredVehicleList);
-    }, [filterList, originalVehicleData, favoriteVehicles]);
+    }, [originalVehicleData, favoriteVehicles]);
 
 
     const handlePressItem = useCallback((vehicleId: string) => {
@@ -60,8 +68,11 @@ export default function MainPage() {
         setIsRefreshing(true);
         setIsLoading(true);
 
-        // Simulate a refresh action
-        setTimeout(() => {
+        if (refreshTimeoutRef.current) {
+            clearTimeout(refreshTimeoutRef.current);
+        }
+
+        refreshTimeoutRef.current = setTimeout(() => {
             setIsRefreshing(false);
             setIsLoading(false);
         }, 2000);
